@@ -3,6 +3,10 @@ name = "bot-example"
 version = "0.1.0"
 description = ""
 authors = ["Sergio Soto <sergiosotonunez@gmail.com>"]
+packages = [
+    { include = "mybot" },
+]
+
 
 [tool.poetry.dependencies]
 python = "^3.8"
