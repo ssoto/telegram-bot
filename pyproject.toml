@@ -6,6 +6,8 @@ authors = ["Sergio Soto <sergiosotonunez@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
+requests = "^2.26.0"
+python-telegram-bot = "^13.7"
 
 [tool.poetry.dev-dependencies]
 
