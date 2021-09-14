@@ -5,8 +5,11 @@ import logging
 import os
 
 from telegram.ext import Updater, CommandHandler
+from telegram.ext import MessageHandler, Filters
 
 START = 'start'
+HELP = 'help'
+AYUDA = 'ayuda'
 
 
 def get_token() -> str:
@@ -18,17 +21,37 @@ def get_token() -> str:
     return token
 
 
-def bot_start_handler(update, context):
+def start_handler(update, context):
     context.bot.send_message(
         chat_id=update.effective_chat.id,
         text="Soy un bot, háblame por favor!")
 
 
-def connect_handlers(updater: object):
-    updater.dispatcher.add_handler(CommandHandler(START, bot_start_handler))
+def help_handler(updater: object, context: object):
+    context.bot.send_message(
+        chat_id=updater.effective_chat.id,
+        text="Para usarme prueba a citarme al principio de un mensaje")
 
 
-if __name__ == "__main__":
+def echo_handler(updater: object, context: object):
+    context.bot.send_message(
+        chat_id=updater.effective_chat.id,
+        text=updater.message.text
+    )
+
+
+def connect_handlers(dispatcher: object):
+    dispatcher.add_handler(
+        CommandHandler(START, start_handler))
+
+    dispatcher.add_handler(
+        CommandHandler(HELP, help_handler))
+
+    echohandler = MessageHandler(Filters.text & (~Filters.command), echo_handler)
+    dispatcher.add_handler(echohandler)
+
+
+def main():
     logging.basicConfig(level=logging.DEBUG,
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     logging.info("Starting up telegram bot...")
@@ -37,8 +60,11 @@ if __name__ == "__main__":
     updater = Updater(token=get_token(), use_context=True)
 
     # connect handlers
-    connect_handlers(updater)
+    connect_handlers(updater.dispatcher)
 
     # main loop
     updater.start_polling()
 
+
+if __name__ == "__main__":
+    main()
